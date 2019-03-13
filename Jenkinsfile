@@ -30,21 +30,7 @@ node('build-slave') {
                 }
                 echo "build_tag: " + build_tag
             }
-
-            stage('Build') {
-                env.NODE_ENV = "build"
-                print "Environment will be : ${env.NODE_ENV}"
-                sh('git submodule update --init')
-                sh('git submodule update --init --recursive --remote')
-                sh('chmod 777 build.sh')
-                sh("./build.sh ${build_tag} ${env.NODE_NAME} ${hub_org}")
-            }
-            stage('ArchiveArtifacts') {
-                archiveArtifacts "metadata.json"
-                currentBuild.description = "${build_tag}"
-            }
         }
-
     }
     catch (err) {
         currentBuild.result = "FAILURE"
